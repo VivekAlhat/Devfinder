@@ -8,12 +8,14 @@ import { useEffect, useState } from "react";
 import { fetchGithubUser } from "../utils/functions";
 import Idle from "./Idle";
 import moment from "moment";
-import Fallback from "./Fallback";
+import { useThemeMode } from "../utils/hooks";
 
 const UserInfo = ({ username }: { username: string }): any => {
   const [user, setUser] = useState<IUser | null>(null);
   const [state, setState] = useState<string>("idle");
   const [error, setError] = useState<TypeError | null>();
+
+  const theme = useThemeMode("theme");
 
   useEffect(() => {
     if (!username) {
@@ -39,7 +41,11 @@ const UserInfo = ({ username }: { username: string }): any => {
     throw new Error("API error occured");
   } else if (state === "resolved") {
     return (
-      <div className="bg-gray-700 p-8 rounded-xl grid sm:grid-cols-4 gap-6">
+      <div
+        className={`p-8 rounded-xl border border-zinc-500  grid sm:grid-cols-4 gap-6 ${
+          theme === "dark" ? "dark" : ""
+        }`}
+      >
         <img
           src={
             user?.avatar_url ??
@@ -66,7 +72,11 @@ const UserInfo = ({ username }: { username: string }): any => {
         <p className="text-md sm:text-lg col-start-1 col-span-4 sm:col-start-2 sm:col-span-3 sm:-mt-16">
           {user?.bio ?? "This profile has no bio."}
         </p>
-        <div className="flex items-center justify-between bg-gray-800 p-5 sm:px-12 rounded-xl col-start-1 col-span-4 sm:col-start-2 sm:col-span-3 sm:-mt-8">
+        <div
+          className={`flex items-center justify-between border border-zinc-500  p-5 sm:px-12 rounded-xl col-start-1 col-span-4 sm:col-start-2 sm:col-span-3 sm:-mt-8 ${
+            theme === "dark" ? "bg-gray-700" : ""
+          }`}
+        >
           <div>
             <p>Repos</p>
             <p className="text-xl sm:text-3xl font-bold text-center">
