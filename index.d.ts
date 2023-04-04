@@ -18,3 +18,9 @@ interface IFormInputProps {
   searchFilter: string;
   handleClick: (newSearchFilter: string) => void;
 }
+
+interface UserInfo {
+  user: IUser | null;
+  error: TypeError | null;
+  state: string;
+}

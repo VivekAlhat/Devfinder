@@ -1,6 +1,9 @@
 const Fallback = ({ error, resetErrorBoundary }: any) => {
   return (
-    <div role="alert" className="p-8 rounded-xl text-center">
+    <div
+      role="alert"
+      className="p-8 rounded-xl text-center border border-zinc-500"
+    >
       <p>Some error has occured:</p>
       <pre style={{ whiteSpace: "normal" }}>{JSON.stringify(error)}</pre>
       <button

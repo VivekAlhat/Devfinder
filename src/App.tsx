@@ -5,10 +5,8 @@ import Header from "./components/Header";
 import FormInput from "./components/FormInput";
 import Fallback from "./components/Fallback";
 import UserInfo from "./components/UserInfo";
-import { useThemeMode } from "./utils/hooks";
 
 function App() {
-  const theme = useThemeMode("theme");
   const [searchFilter, setSearchFilter] = useState<string>("");
 
   const handleClick = (newSearchFilter: string) => {
@@ -17,11 +15,9 @@ function App() {
 
   return (
     <div
-      className={`font-mono h-screen grid place-content-center ${
-        theme === "dark" ? "dark" : ""
-      }`}
+      className={`font-mono h-screen grid place-content-center bg-slate-700 text-zinc-100`}
     >
-      <div className="flex flex-col gap-5 w-screen h-fit p-4 sm:w-[30rem] md:w-[40rem] lg:w-[50rem]">
+      <div className="flex flex-col gap-5 w-screen min-h-[600px] max-h-fit p-4 sm:w-[30rem] md:w-[40rem] lg:w-[50rem]">
         <Header />
         <FormInput searchFilter={searchFilter} handleClick={handleClick} />
         <ErrorBoundary

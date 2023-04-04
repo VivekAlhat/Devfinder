@@ -8,43 +8,49 @@ import { useEffect, useState } from "react";
 import { fetchGithubUser } from "../utils/functions";
 import Idle from "./Idle";
 import moment from "moment";
-import { useThemeMode } from "../utils/hooks";
+import Loader from "./Loader";
 
 const UserInfo = ({ username }: { username: string }): any => {
-  const [user, setUser] = useState<IUser | null>(null);
-  const [state, setState] = useState<string>("idle");
-  const [error, setError] = useState<TypeError | null>();
+  const [userInfo, setUserInfo] = useState<UserInfo>({
+    user: null,
+    state: "idle",
+    error: null,
+  });
 
-  const theme = useThemeMode("theme");
+  const { user, state, error } = userInfo;
 
   useEffect(() => {
     if (!username) {
       return;
     }
-    setUser(null);
-    setError(null);
-    setState("pending");
+    setUserInfo((prev) => ({ ...prev, state: "pending" }));
     fetchGithubUser(username)
       .then((user) => {
-        setUser(user);
-        setState("resolved");
+        setUserInfo((prev) => ({ ...prev, user, state: "resolved" }));
       })
       .catch((error) => {
-        setError(error);
-        setState("rejected");
+        setUserInfo((prev) => ({
+          ...prev,
+          error: { ...error, message: "API Error Occurred." },
+          state: "rejected",
+        }));
       });
   }, [username]);
 
   if (state === "idle") {
     return <Idle />;
+  } else if (state === "pending") {
+    return (
+      <div className="grid h-48 place-content-center">
+        <Loader />
+      </div>
+    );
   } else if (state === "rejected") {
-    throw new Error("API error occured");
+    throw error;
   } else if (state === "resolved") {
     return (
       <div
-        className={`p-8 rounded-xl border border-zinc-500  grid sm:grid-cols-4 gap-6 ${
-          theme === "dark" ? "dark" : ""
-        }`}
+        className={`p-8 rounded-xl border border-zinc-500 grid sm:grid-cols-4 gap-6`}
       >
         <img
           src={
@@ -62,7 +68,7 @@ const UserInfo = ({ username }: { username: string }): any => {
                   ? user.name
                   : "Username not found"}
               </p>
-              <p className="text-blue-300 font-medium">
+              <p className="text-blue-500 font-medium">
                 @{user?.login ?? "Username not found"}
               </p>
             </div>
@@ -73,9 +79,7 @@ const UserInfo = ({ username }: { username: string }): any => {
           {user?.bio ?? "This profile has no bio."}
         </p>
         <div
-          className={`flex items-center justify-between border border-zinc-500  p-5 sm:px-12 rounded-xl col-start-1 col-span-4 sm:col-start-2 sm:col-span-3 sm:-mt-8 ${
-            theme === "dark" ? "bg-gray-700" : ""
-          }`}
+          className={`flex items-center justify-between border border-zinc-500  p-5 sm:px-12 rounded-xl col-start-1 col-span-4 sm:col-start-2 sm:col-span-3 sm:-mt-8`}
         >
           <div>
             <p>Repos</p>
